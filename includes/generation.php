@@ -293,7 +293,20 @@ class WooEenvoudigFactureren_Generation {
 
         $document = array();
         $document['client_id'] = $client_id;
-
+        
+        if ($this->options->get('use_order_reference')) {
+            $order_reference = $order->get_order_number();
+            $order_reference_prefix = $this->options->get('order_reference_prefix');
+            
+            if (is_string($order_reference_prefix) && strlen($order_reference_prefix) > 0) {
+                $order_reference_prefix .= ' ';
+            } else {
+                $order_reference_prefix = '';
+            }
+            
+            $document['reference'] = $order_reference_prefix . $order_reference;
+        }
+        
         $layout_id = $this->options->get('layout_id');
         if ($layout_id) {
             $document['layout_id'] = (int)$layout_id;
