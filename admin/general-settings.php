@@ -27,6 +27,8 @@ class WooEenvoudigFactureren_GeneralSettings {
                 $set_paid = isset($_POST['wcef_set_paid']) && $_POST['wcef_set_paid']=='1';
                 $add_sku = isset($_POST['wcef_add_sku']) && $_POST['wcef_add_sku']=='1';
                 $search_client_number = isset($_POST['wcef_search_client_number']) && $_POST['wcef_search_client_number']=='1';
+                $use_order_reference = isset($_POST['wcef_use_order_reference']) && $_POST['wcef_use_order_reference']=='1';
+                $order_reference_prefix = sanitize_text_field($_POST['wcef_order_reference_prefix']);
 
                 $this->options->update('layout_id',$layout_id);
                 $this->options->update('document_type',$document_type);
@@ -35,6 +37,8 @@ class WooEenvoudigFactureren_GeneralSettings {
                 $this->options->update('set_paid',$set_paid);
                 $this->options->update('add_sku',$add_sku);
                 $this->options->update('search_client_number', $search_client_number);
+                $this->options->update('use_order_reference', $use_order_reference);
+                $this->options->update('order_reference_prefix', $order_reference_prefix);
             }
         }
     }
@@ -68,6 +72,10 @@ class WooEenvoudigFactureren_GeneralSettings {
         if (!$layouts) {
             $layouts = [];
         }
+        
+        $use_order_reference = !!$this->options->get('use_order_reference');
+        
+        $order_reference_prefix = $this->options->get('order_reference_prefix');
 
 ?>
     <div class="wrap">
@@ -137,6 +145,23 @@ class WooEenvoudigFactureren_GeneralSettings {
                                     <option  value="<?php echo $value->layout_id ?>" <?php if ($layout_id == $value->layout_id) echo "selected"; ?>><?php echo $value->name; ?></option>';
                                 <?php endforeach ?>
                             </select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">
+                            <label><?php _e('Document Reference', 'woo-eenvoudigfactureren' ); ?></label>
+                        </th>
+                        <td>
+                            <label><input type="checkbox" value="1" name="wcef_use_order_reference" <?php if ($use_order_reference) echo 'checked'; ?>/> <?php _e('Use WooCommerce order number on the document as a reference', 'woo-eenvoudigfactureren' ); ?></label>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">
+                            <label><?php _e('Reference Prefix', 'woo-eenvoudigfactureren' ); ?></label>
+                        </th>
+                        <td>
+                            <input type="text" value="<?php echo $order_reference_prefix; ?>" name="wcef_order_reference_prefix"/><br>
+                            <small><?php _e('Prefix used in front of the order number on the document, e.g. "Order"', 'woo-eenvoudigfactureren' ); ?></small>
                         </td>
                     </tr>
                     <tr valign="top">
